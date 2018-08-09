@@ -92,7 +92,7 @@ public class EhEngine {
         sEhFilter = EhFilter.getInstance();
     }
 
-    private static void throwException(Call call, int code, @Nullable Headers headers,
+    private static void doThrowException(Call call, int code, @Nullable Headers headers,
             @Nullable String body, Exception e) throws Exception {
         if (call.isCanceled()) {
             throw new CancelledException();
@@ -118,6 +118,18 @@ public class EhEngine {
 
         if (code >= 400) {
             throw new StatusCodeException(code);
+        }
+
+        throw e;
+    }
+
+    private static void throwException(Call call, int code, @Nullable Headers headers,
+        @Nullable String body, Exception e) throws Exception {
+        try {
+            doThrowException(call, code, headers, body, e);
+        } catch (Throwable error) {
+            error.printStackTrace();
+            throw error;
         }
     }
 
@@ -197,7 +209,7 @@ public class EhEngine {
             }
         }
 
-        if (list.size() > 0 && (Settings.getShowJpnTitle() || sEhFilter.needCallApi())) {
+        if (list.size() > 0 && (Settings.getShowJpnTitle() || Settings.getShowGalleryPages() || sEhFilter.needCallApi())) {
             // Fill by api
             fillGalleryListByApi(task, okHttpClient, list);
 
@@ -893,7 +905,7 @@ public class EhEngine {
             }
         }
 
-        if (list.size() > 0 && (Settings.getShowJpnTitle() || sEhFilter.needCallApi())) {
+        if (list.size() > 0 && (Settings.getShowJpnTitle() || Settings.getShowGalleryPages() || sEhFilter.needCallApi())) {
             // Fill by api
             fillGalleryListByApi(task, okHttpClient, list);
 

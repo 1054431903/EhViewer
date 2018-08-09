@@ -57,7 +57,10 @@
 
     <string name="cellular_network_warning">正在使用移动网络</string>
 
-    <string name="error_bad_status_code">错误的状态码：%d</string>
+    <string name="clipboard_gallery_url_dialog_title">发现画廊</string>
+    <string name="clipboard_gallery_url_dialog_message">剪切板里有画廊链接，要不要看看？</string>
+
+    <string name="error_bad_status_code">错误状态码：%d</string>
     <string name="error_timeout">超时</string>
     <string name="error_unknown_host">未知主机</string>
     <string name="error_redirection">太多重定向</string>
@@ -415,6 +418,8 @@
     <string name="settings_eh_show_jpn_title">显示日文标题</string>
     <string name="settings_eh_show_jpn_title_summary_on">尝试显示日文标题。这会使获取画廊列表花费更多时间</string>
     <string name="settings_eh_show_jpn_title_summary_off">显示默认标题。一般是英文标题</string>
+    <string name="settings_eh_show_gallery_pages">显示画廊页数</string>
+    <string name="settings_eh_show_gallery_pages_summary">在画廊列表中显示页数。这会使获取画廊列表花费更多时间</string>
     <string name="settings_eh_filter">过滤</string>
     <string name="settings_eh_filter_summary">过滤标题，上传者，标签和标签组</string>
     <string name="settings_eh_cellular_network_warning">移动网络警告</string>

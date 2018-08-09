@@ -314,6 +314,13 @@ public class Settings {
         return getBoolean(KEY_SHOW_JPN_TITLE, DEFAULT_SHOW_JPN_TITLE);
     }
 
+    private static final String KEY_SHOW_GALLERY_PAGES = "show_gallery_pages";
+    private static final boolean DEFAULT_SHOW_GALLERY_PAGES = false;
+
+    public static boolean getShowGalleryPages() {
+        return getBoolean(KEY_SHOW_GALLERY_PAGES, DEFAULT_SHOW_GALLERY_PAGES);
+    }
+
     public static final String KEY_DEFAULT_CATEGORIES = "default_categories";
     public static final int DEFAULT_DEFAULT_CATEGORIES = EhUtils.ALL_CATEGORY;
 
@@ -1099,5 +1106,16 @@ public class Settings {
 
     public static void putGuideGallery(boolean value) {
         putBoolean(KEY_GUIDE_GALLERY, value);
+    }
+
+    private static final String KEY_CLIPBOARD_TEXT_HASH_CODE = "clipboard_text_hash_code";
+    private static final int DEFAULT_CLIPBOARD_TEXT_HASH_CODE = 0;
+
+    public static int getClipboardTextHashCode() {
+        return getInt(KEY_CLIPBOARD_TEXT_HASH_CODE, DEFAULT_CLIPBOARD_TEXT_HASH_CODE);
+    }
+
+    public static void putClipboardTextHashCode(int value) {
+        putInt(KEY_CLIPBOARD_TEXT_HASH_CODE, value);
     }
 }

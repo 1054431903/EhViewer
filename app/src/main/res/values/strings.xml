@@ -73,6 +73,9 @@
 
     <string name="cellular_network_warning">Connected to cellular networks</string>
 
+    <string name="clipboard_gallery_url_dialog_title">Gallery Detected</string>
+    <string name="clipboard_gallery_url_dialog_message">A gallery url was found in your clipboard. Check it now?</string>
+
     <string name="error_status_code_400" translatable="false">Bad Request</string>
     <string name="error_status_code_401" translatable="false">Unauthorized</string>
     <string name="error_status_code_402" translatable="false">Payment Required</string>
@@ -154,7 +157,7 @@
     <!-- Update -->
     <string name="update">Update</string>
     <string name="update_plain">Version: %1$s\nSize: %2$s\n\n%3$s</string>
-    <string name="update_to_date">EhViewer is update to date</string>
+    <string name="update_to_date">You are using the latest version of EhViewer</string>
 
     <!-- Gallery List -->
     <string name="gallery_list_search_bar_hint_exhentai">Search ExHentai</string>
@@ -458,6 +461,8 @@
     <string name="settings_eh_show_jpn_title">Show Japanese title</string>
     <string name="settings_eh_show_jpn_title_summary_on">Try to show Japanese title. It takes more time to get gallery list</string>
     <string name="settings_eh_show_jpn_title_summary_off">Show default title. It is usually English title</string>
+    <string name="settings_eh_show_gallery_pages">Show gallery pages</string>
+    <string name="settings_eh_show_gallery_pages_summary">Display the number of pages in the gallery list. It takes more time to get gallery list</string>
     <string name="settings_eh_filter">Filter</string>
     <string name="settings_eh_filter_summary">Filter by title, uploader, tag and tag namespace</string>
     <string name="settings_eh_cellular_network_warning">Cellular network warning</string>
@@ -539,7 +544,7 @@
     <string name="settings_advanced_read_cache_size">Read cache size</string>
     <string name="settings_advanced_app_language_title">App language</string>
     <string name="settings_advanced_built_in_hosts_title">Built-in hosts.txt</string>
-    <string name="settings_advanced_built_in_hosts_summary">The host-to-IP mapping provided by the app\nIt can be overrode by custom hosts.txt</string>
+    <string name="settings_advanced_built_in_hosts_summary">The host-to-IP mapping provided by the app\nIt can be overridden by custom hosts.txt</string>
     <string name="settings_advanced_custom_hosts_title">Custom hosts.txt</string>
     <string name="settings_advanced_custom_hosts_summary">Map hostnames to IP addresses\nIt can override built-in hosts.txt</string>
     <string name="settings_privacy_pattern_protection_title">Pattern protection</string>
@@ -590,8 +595,10 @@
     <string name="cant_read_the_file">Can\'t read the file</string>
 
     <string name="app_language_system">System Language (Default)</string>
+    <string name="app_language_de">Deutsch</string>
     <string name="app_language_en" translatable="false">English</string>
     <string name="app_language_es" translatable="false">Español</string>
+    <string name="app_language_fr">français (France)</string>
     <string name="app_language_ja" translatable="false">日本語</string>
     <string name="app_language_ko" translatable="false">한국어</string>
     <string name="app_language_zh_cn" translatable="false">中文（大陆）</string>
@@ -708,8 +715,8 @@
     <string name="archive">Archive</string>
     <string name="download_archive_failure_no_hath">Need H@H client for archive download</string>
     <string name="settings_privacy">Privacy</string>
-    <string name="settings_privacy_secure">Not Allowed Screen Capture</string>
-    <string name="settings_privacy_secure_summary">If enabled, you cannot take screenshots of the app, and the system will not display app contents in the task switcher\n\nNeed to restart the app for this to take effect</string>
+    <string name="settings_privacy_secure">Prevent screenshots</string>
+    <string name="settings_privacy_secure_summary">If enabled, you cannot take screenshots of the app, and the system will not display app contents in the task switcher\n\nYou need to restart the app for the changes to take effect</string>
 
     <string name="download_service">Download Service</string>
 </resources>
