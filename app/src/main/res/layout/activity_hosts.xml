@@ -43,13 +43,13 @@
     android:paddingRight="@dimen/corner_fab_margin"
     android:paddingBottom="@dimen/corner_fab_margin">
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:id="@+id/fab"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       app:srcCompat="@drawable/v_plus_dark_x24"
-      app:backgroundTint="?attr/colorPrimary"
+      app:backgroundTint="?attr/widgetColorThemePrimary"
       style="@style/Widget.Design.FloatingActionButton"/>
 
   </com.hippo.widget.FabLayout>

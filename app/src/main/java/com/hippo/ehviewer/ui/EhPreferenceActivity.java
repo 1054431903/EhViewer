@@ -18,25 +18,41 @@ package com.hippo.ehviewer.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.WindowManager;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.hippo.app.AppCompatPreferenceActivity;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.hippo.android.resource.AttrResources;
+import com.hippo.app.PrettyPreferenceActivity;
 import com.hippo.content.ContextLocalWrapper;
+import com.hippo.ehviewer.Analytics;
 import com.hippo.ehviewer.EhApplication;
+import com.hippo.ehviewer.R;
 import com.hippo.ehviewer.Settings;
 import java.util.Locale;
 
-public abstract class EhPreferenceActivity extends AppCompatPreferenceActivity {
+public abstract class EhPreferenceActivity extends PrettyPreferenceActivity {
 
-    private boolean mTrackStarted;
+    @StyleRes
+    protected abstract int getThemeResId(int theme);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(getThemeResId(Settings.getTheme()));
+
         super.onCreate(savedInstanceState);
 
         ((EhApplication) getApplication()).registerActivity(this);
+
+        if (Analytics.isEnabled()) {
+            FirebaseAnalytics.getInstance(this);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Settings.getApplyNavBarThemeColor()) {
+            getWindow().setNavigationBarColor(AttrResources.getAttrColor(this, R.attr.colorPrimaryDark));
+        }
     }
 
     @Override
@@ -44,26 +60,6 @@ public abstract class EhPreferenceActivity extends AppCompatPreferenceActivity {
         super.onDestroy();
 
         ((EhApplication) getApplication()).unregisterActivity(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (Settings.getEnableAnalytics()) {
-            EasyTracker.getInstance(this).activityStart(this);
-            mTrackStarted = true;
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        if (mTrackStarted) {
-            EasyTracker.getInstance(this).activityStop(this);
-            mTrackStarted = false;
-        }
     }
 
     @Override

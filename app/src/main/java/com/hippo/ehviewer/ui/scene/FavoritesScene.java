@@ -21,18 +21,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -45,14 +38,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.SimpleShowcaseEventListener;
 import com.github.amlcurran.showcaseview.targets.PointTarget;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.hippo.android.resource.AttrResources;
 import com.hippo.annotation.Implemented;
 import com.hippo.drawable.DrawerArrowDrawable;
 import com.hippo.easyrecyclerview.EasyRecyclerView;
 import com.hippo.easyrecyclerview.FastScroller;
+import com.hippo.ehviewer.Analytics;
 import com.hippo.ehviewer.EhApplication;
 import com.hippo.ehviewer.EhDB;
 import com.hippo.ehviewer.R;
@@ -63,27 +66,26 @@ import com.hippo.ehviewer.client.EhUrl;
 import com.hippo.ehviewer.client.data.FavListUrlBuilder;
 import com.hippo.ehviewer.client.data.GalleryInfo;
 import com.hippo.ehviewer.client.parser.FavoritesParser;
+import com.hippo.ehviewer.ui.CommonOperations;
 import com.hippo.ehviewer.ui.MainActivity;
 import com.hippo.ehviewer.ui.annotation.DrawerLifeCircle;
 import com.hippo.ehviewer.ui.annotation.ViewLifeCircle;
 import com.hippo.ehviewer.ui.annotation.WholeLifeCircle;
 import com.hippo.ehviewer.widget.EhDrawerLayout;
+import com.hippo.ehviewer.widget.GalleryInfoContentHelper;
 import com.hippo.ehviewer.widget.SearchBar;
 import com.hippo.refreshlayout.RefreshLayout;
 import com.hippo.ripple.Ripple;
 import com.hippo.scene.Announcer;
 import com.hippo.scene.SceneFragment;
-import com.hippo.util.ApiHelper;
 import com.hippo.util.DrawableManager;
 import com.hippo.widget.ContentLayout;
 import com.hippo.widget.FabLayout;
 import com.hippo.widget.SearchBarMover;
+import com.hippo.yorozuya.AssertUtils;
 import com.hippo.yorozuya.ObjectUtils;
 import com.hippo.yorozuya.SimpleHandler;
 import com.hippo.yorozuya.ViewUtils;
-
-import junit.framework.Assert;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -176,7 +178,7 @@ public class FavoritesScene extends BaseScene implements
         super.onCreate(savedInstanceState);
 
         Context context = getContext2();
-        Assert.assertNotNull(context);
+        AssertUtils.assertNotNull(context);
         mClient = EhApplication.getEhClient(context);
         mFavCatArray = Settings.getFavCat();
         mFavCountArray = Settings.getFavCount();
@@ -240,7 +242,7 @@ public class FavoritesScene extends BaseScene implements
         View view = inflater.inflate(R.layout.scene_favorites, container, false);
         ContentLayout contentLayout = (ContentLayout) view.findViewById(R.id.content_layout);
         MainActivity activity = getActivity2();
-        Assert.assertNotNull(activity);
+        AssertUtils.assertNotNull(activity);
         mDrawerLayout = (EhDrawerLayout) ViewUtils.$$(activity, R.id.draw_view);
         mRecyclerView = contentLayout.getRecyclerView();
         FastScroller fastScroller = contentLayout.getFastScroller();
@@ -249,7 +251,7 @@ public class FavoritesScene extends BaseScene implements
         mFabLayout = (FabLayout) ViewUtils.$$(view, R.id.fab_layout);
 
         Context context = getContext2();
-        Assert.assertNotNull(context);
+        AssertUtils.assertNotNull(context);
         Resources resources = context.getResources();
         int paddingTopSB = resources.getDimensionPixelOffset(R.dimen.gallery_padding_top_search_bar);
 
@@ -259,7 +261,7 @@ public class FavoritesScene extends BaseScene implements
         contentLayout.getFastScroller().setOnDragHandlerListener(this);
 
         mAdapter = new FavoritesAdapter(inflater, resources, mRecyclerView, Settings.getListMode());
-        mRecyclerView.setSelector(Ripple.generateRippleDrawable(context, false));
+        mRecyclerView.setSelector(Ripple.generateRippleDrawable(context, !AttrResources.getAttrBoolean(context, R.attr.isLightTheme), new ColorDrawable(Color.TRANSPARENT)));
         mRecyclerView.setDrawSelectorOnTop(true);
         mRecyclerView.hasFixedSize();
         mRecyclerView.setClipToPadding(false);
@@ -273,9 +275,9 @@ public class FavoritesScene extends BaseScene implements
 
         refreshLayout.setHeaderTranslationY(paddingTopSB);
 
-        mLeftDrawable = new DrawerArrowDrawable(context);
+        mLeftDrawable = new DrawerArrowDrawable(context, AttrResources.getAttrColor(context, R.attr.drawableColorPrimary));
         mSearchBar.setLeftDrawable(mLeftDrawable);
-        mSearchBar.setRightDrawable(DrawableManager.getDrawable(context, R.drawable.v_magnify_x24));
+        mSearchBar.setRightDrawable(DrawableManager.getVectorDrawable(context, R.drawable.v_magnify_x24));
         mSearchBar.setHelper(this);
         mSearchBar.setAllowEmptySearch(false);
         updateSearchBar();
@@ -300,6 +302,8 @@ public class FavoritesScene extends BaseScene implements
         }
 
         guideCollections();
+
+        Analytics.viewFavourite();
 
         return view;
     }
@@ -364,7 +368,7 @@ public class FavoritesScene extends BaseScene implements
 
         // Update hint
         if (!ObjectUtils.equal(favCatName, mOldFavCat)) {
-            Drawable searchImage = DrawableManager.getDrawable(context, R.drawable.v_magnify_x24);
+            Drawable searchImage = DrawableManager.getVectorDrawable(context, R.drawable.v_magnify_x24);
             SpannableStringBuilder ssb = new SpannableStringBuilder("   ");
             ssb.append(getString(R.string.favorites_search_bar_hint, favCatName));
             int textSize = (int) (mSearchBar.getEditTextTextSize() * 1.25);
@@ -392,6 +396,7 @@ public class FavoritesScene extends BaseScene implements
         }
 
         if (null != mHelper) {
+            mHelper.destroy();
             if (1 == mHelper.getShownViewIndex()) {
                 mHasFirstRefresh = false;
             }
@@ -486,7 +491,7 @@ public class FavoritesScene extends BaseScene implements
         final Context context = getContext2();
         Toolbar toolbar = (Toolbar) ViewUtils.$$(view, R.id.toolbar);
 
-        Assert.assertNotNull(context);
+        AssertUtils.assertNotNull(context);
 
         toolbar.setTitle(R.string.collections);
         toolbar.inflateMenu(R.menu.drawer_favorites);
@@ -607,13 +612,16 @@ public class FavoritesScene extends BaseScene implements
             if (mRecyclerView != null && mRecyclerView.isInCustomChoice()) {
                 mRecyclerView.toggleItemChecked(position);
             } else if (mHelper != null) {
-                GalleryInfo gi = mHelper.getDataAt(position);
+                GalleryInfo gi = mHelper.getDataAtEx(position);
+                if (gi == null) {
+                    return true;
+                }
                 Bundle args = new Bundle();
                 args.putString(GalleryDetailScene.KEY_ACTION, GalleryDetailScene.ACTION_GALLERY_INFO);
                 args.putParcelable(GalleryDetailScene.KEY_GALLERY_INFO, gi);
                 Announcer announcer = new Announcer(GalleryDetailScene.class).setArgs(args);
                 View thumb;
-                if (ApiHelper.SUPPORT_TRANSITION && null != (thumb = view.findViewById(R.id.thumb))) {
+                if (null != (thumb = view.findViewById(R.id.thumb))) {
                     announcer.setTranHelper(new EnterGalleryDetailTransaction(thumb));
                 }
                 startScene(announcer);
@@ -753,12 +761,26 @@ public class FavoritesScene extends BaseScene implements
         SparseBooleanArray stateArray = mRecyclerView.getCheckedItemPositions();
         for (int i = 0, n = stateArray.size(); i < n; i++) {
             if (stateArray.valueAt(i)) {
-                mModifyGiList.add(mHelper.getDataAt(stateArray.keyAt(i)));
+                GalleryInfo gi = mHelper.getDataAtEx(stateArray.keyAt(i));
+                if (gi != null) {
+                    mModifyGiList.add(gi);
+                }
             }
         }
 
         switch (position) {
-            case 0: { // Delete
+            case 0: { // Download
+                Activity activity = getActivity2();
+                if (activity != null) {
+                    CommonOperations.startDownload(getActivity2(), mModifyGiList, false);
+                }
+                mModifyGiList.clear();
+                if (mRecyclerView != null && mRecyclerView.isInCustomChoice()) {
+                    mRecyclerView.outOfCustomChoiceMode();
+                }
+                break;
+            }
+            case 1: { // Delete
                 DeleteDialogHelper helper = new DeleteDialogHelper();
                 new AlertDialog.Builder(context)
                         .setTitle(R.string.delete_favorites_dialog_title)
@@ -768,7 +790,7 @@ public class FavoritesScene extends BaseScene implements
                         .show();
                 break;
             }
-            case 1: { // Move
+            case 2: { // Move
                 MoveDialogHelper helper = new MoveDialogHelper();
                 // First is local favorite, the other 10 is cloud favorite
                 String[] array = new String[11];
@@ -858,8 +880,7 @@ public class FavoritesScene extends BaseScene implements
             }
 
             updateSearchBar();
-            mHelper.setPages(taskId, result.pages);
-            mHelper.onGetPageData(taskId, result.galleryInfoList);
+            mHelper.onGetPageData(taskId, result.pages, result.nextPage, result.galleryInfoList);
 
             if (mDrawerAdapter != null) {
                 mDrawerAdapter.notifyDataSetChanged();
@@ -883,14 +904,19 @@ public class FavoritesScene extends BaseScene implements
             } else {
                 list = EhDB.searchLocalFavorites(keyword);
             }
+
             if (list.size() == 0) {
-                mHelper.setPages(taskId, 0);
-                mHelper.onGetPageData(taskId, Collections.EMPTY_LIST);
+                mHelper.onGetPageData(taskId, 0, 0, Collections.EMPTY_LIST);
             } else {
+                mHelper.onGetPageData(taskId, 1, 0, list);
+            }
+
+            if (TextUtils.isEmpty(keyword)) {
                 mFavLocalCount = list.size();
                 Settings.putFavLocalCount(mFavLocalCount);
-                mHelper.setPages(taskId, 1);
-                mHelper.onGetPageData(taskId, list);
+                if (mDrawerAdapter != null) {
+                    mDrawerAdapter.notifyDataSetChanged();
+                }
             }
         }
     }
@@ -986,7 +1012,7 @@ public class FavoritesScene extends BaseScene implements
 
         public FavoritesAdapter(@NonNull LayoutInflater inflater, @NonNull Resources resources,
                 @NonNull RecyclerView recyclerView, int type) {
-            super(inflater, resources, recyclerView, type);
+            super(inflater, resources, recyclerView, type, false);
         }
 
         @Override
@@ -997,11 +1023,11 @@ public class FavoritesScene extends BaseScene implements
         @Nullable
         @Override
         public GalleryInfo getDataAt(int position) {
-            return null != mHelper ? mHelper.getDataAt(position) : null;
+            return null != mHelper ? mHelper.getDataAtEx(position) : null;
         }
     }
 
-    private class FavoritesHelper extends ContentLayout.ContentHelper<GalleryInfo> {
+    private class FavoritesHelper extends GalleryInfoContentHelper {
 
         @Override
         protected void getPageData(final int taskId, int type, int page) {
@@ -1023,13 +1049,14 @@ public class FavoritesScene extends BaseScene implements
                         gidArray[i] = gi.gid;
                         tokenArray[i] = gi.token;
                     }
+                    List<GalleryInfo> modifyGiListBackup = new ArrayList<>(mModifyGiList);
                     mModifyGiList.clear();
 
                     EhRequest request = new EhRequest();
                     request.setMethod(EhClient.METHOD_ADD_FAVORITES_RANGE);
                     request.setCallback(new AddFavoritesListener(getContext(),
                             activity.getStageId(), getTag(),
-                            taskId, mUrlBuilder.getKeyword()));
+                            taskId, mUrlBuilder.getKeyword(), modifyGiListBackup));
                     request.setArgs(gidArray, tokenArray, mModifyFavCat);
                     mClient.execute(request);
                 } else {
@@ -1116,6 +1143,11 @@ public class FavoritesScene extends BaseScene implements
         }
 
         @Override
+        protected boolean isDuplicate(GalleryInfo d1, GalleryInfo d2) {
+            return d1.gid == d2.gid;
+        }
+
+        @Override
         protected void onScrollToPosition(int postion) {
             if (0 == postion) {
                 if (null != mSearchBarMover) {
@@ -1129,12 +1161,14 @@ public class FavoritesScene extends BaseScene implements
 
         private final int mTaskId;
         private final String mKeyword;
+        private final List<GalleryInfo> mBackup;
 
         private AddFavoritesListener(Context context, int stageId,
-                String sceneTag, int taskId, String keyword) {
+                String sceneTag, int taskId, String keyword, List<GalleryInfo> backup) {
             super(context, stageId, sceneTag);
             mTaskId = taskId;
             mKeyword = keyword;
+            mBackup = backup;
         }
 
         @Override
@@ -1147,6 +1181,10 @@ public class FavoritesScene extends BaseScene implements
 
         @Override
         public void onFailure(Exception e) {
+            // TODO It's a failure, add all of backup back to db.
+            // But how to known which one is failed?
+            EhDB.putLocalFavorites(mBackup);
+
             FavoritesScene scene = getScene();
             if (scene != null) {
                 scene.onGetFavoritesLocal(mKeyword, mTaskId);

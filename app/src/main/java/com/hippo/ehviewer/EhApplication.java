@@ -16,16 +16,24 @@
 
 package com.hippo.ehviewer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentCallbacks2;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Debug;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.LruCache;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.LruCache;
+import com.getkeepsafe.relinker.ReLinker;
+import com.hippo.a7zip.A7Zip;
+import com.hippo.a7zip.A7ZipExtractLite;
 import com.hippo.beerbelly.SimpleDiskCache;
 import com.hippo.conaco.Conaco;
 import com.hippo.content.RecordingApplication;
@@ -43,6 +51,8 @@ import com.hippo.network.StatusCodeException;
 import com.hippo.text.Html;
 import com.hippo.unifile.UniFile;
 import com.hippo.util.BitmapUtils;
+import com.hippo.util.ExceptionUtils;
+import com.hippo.util.IoThreadPoolExecutor;
 import com.hippo.util.ReadableTime;
 import com.hippo.yorozuya.FileUtils;
 import com.hippo.yorozuya.IntIdGenerator;
@@ -56,24 +66,25 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
-public class EhApplication extends RecordingApplication implements Thread.UncaughtExceptionHandler {
+public class EhApplication extends RecordingApplication {
 
     private static final String TAG = EhApplication.class.getSimpleName();
+    private static final String KEY_GLOBAL_STUFF_NEXT_ID = "global_stuff_next_id";
 
     public static final boolean BETA = false;
-    public static final boolean AUTO_UPDATE = true;
 
     private static final boolean DEBUG_CONACO = false;
     private static final boolean DEBUG_PRINT_NATIVE_MEMORY = false;
     private static final boolean DEBUG_PRINT_IMAGE_COUNT = false;
     private static final long DEBUG_PRINT_INTERVAL = 3000L;
 
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
+    private static EhApplication instance;
 
     private final IntIdGenerator mIdGenerator = new IntIdGenerator();
     private final HashMap<Integer, Object> mGlobalStuffMap = new HashMap<>();
     private EhCookieStore mEhCookieStore;
     private EhClient mEhClient;
+    private EhProxySelector mEhProxySelector;
     private OkHttpClient mOkHttpClient;
     private ImageBitmapHelper mImageBitmapHelper;
     private Conaco<ImageBitmap> mConaco;
@@ -81,14 +92,31 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
     private SimpleDiskCache mSpiderInfoCache;
     private DownloadManager mDownloadManager;
     private Hosts mHosts;
+    private FavouriteStatusRouter mFavouriteStatusRouter;
 
     private final List<Activity> mActivityList = new ArrayList<>();
 
+    public static EhApplication getInstance() {
+        return instance;
+    }
+
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onCreate() {
-        // Prepare to catch crash
-        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(this);
+        instance = this;
+
+        Thread.UncaughtExceptionHandler handler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            try {
+                if (Settings.getSaveCrashLog()) {
+                    Crash.saveCrashLog(instance, e);
+                }
+            } catch (Throwable ignored) { }
+
+            if (handler != null) {
+                handler.uncaughtException(t, e);
+            }
+        });
 
         super.onCreate();
 
@@ -102,6 +130,8 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
         EhDB.initialize(this);
         EhEngine.initialize();
         BitmapUtils.initialize(this);
+        Image.initialize(this);
+        A7Zip.loadLibrary(A7ZipExtractLite.LIBRARY, libname -> ReLinker.loadLibrary(EhApplication.this, libname));
 
         if (EhDB.needMerge()) {
             EhDB.mergeOldDB(this);
@@ -111,17 +141,32 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
             Analytics.start(this);
         }
 
-        // Disable no media file checker for now. Some devices stuck here.
-//        // Check no media file
-//        UniFile downloadLocation = Settings.getDownloadLocation();
-//        if (Settings.getMediaScan()) {
-//            CommonOperations.removeNoMediaFile(downloadLocation);
-//        } else {
-//            CommonOperations.ensureNoMediaFile(downloadLocation);
-//        }
+        // Do io tasks in new thread
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                // Check no media file
+                try {
+                    UniFile downloadLocation = Settings.getDownloadLocation();
+                    if (Settings.getMediaScan()) {
+                        CommonOperations.removeNoMediaFile(downloadLocation);
+                    } else {
+                        CommonOperations.ensureNoMediaFile(downloadLocation);
+                    }
+                } catch (Throwable t) {
+                    ExceptionUtils.throwIfFatal(t);
+                }
 
-        // Clear temp dir
-        clearTempDir();
+                // Clear temp files
+                try {
+                    clearTempDir();
+                } catch (Throwable t) {
+                    ExceptionUtils.throwIfFatal(t);
+                }
+
+                return null;
+            }
+        }.executeOnExecutor(IoThreadPoolExecutor.getInstance());
 
         // Check app update
         update();
@@ -133,6 +178,8 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
         } catch (PackageManager.NameNotFoundException e) {
             // Ignore
         }
+
+        mIdGenerator.setNextId(Settings.getInt(KEY_GLOBAL_STUFF_NEXT_ID, 0));
 
         if (DEBUG_PRINT_NATIVE_MEMORY || DEBUG_PRINT_IMAGE_COUNT) {
             debugPrint();
@@ -197,6 +244,7 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
     public int putGlobalStuff(@NonNull Object o) {
         int id = mIdGenerator.nextId();
         mGlobalStuffMap.put(id, o);
+        Settings.putInt(KEY_GLOBAL_STUFF_NEXT_ID, mIdGenerator.nextId());
         return id;
     }
 
@@ -234,6 +282,15 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
     }
 
     @NonNull
+    public static EhProxySelector getEhProxySelector(@NonNull Context context) {
+        EhApplication application = ((EhApplication) context.getApplicationContext());
+        if (application.mEhProxySelector == null) {
+            application.mEhProxySelector = new EhProxySelector();
+        }
+        return application.mEhProxySelector;
+    }
+
+    @NonNull
     public static OkHttpClient getOkHttpClient(@NonNull Context context) {
         EhApplication application = ((EhApplication) context.getApplicationContext());
         if (application.mOkHttpClient == null) {
@@ -243,6 +300,7 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .cookieJar(getEhCookieStore(application))
                     .dns(new EhDns(application))
+                    .proxySelector(getEhProxySelector(application))
                     .build();
         }
         return application.mOkHttpClient;
@@ -285,6 +343,12 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
         if (application.mGalleryDetailCache == null) {
             // Max size 25, 3 min timeout
             application.mGalleryDetailCache = new LruCache<>(25);
+            getFavouriteStatusRouter().addListener((gid, slot) -> {
+                GalleryDetail gd = application.mGalleryDetailCache.get(gid);
+                if (gd != null) {
+                    gd.favoriteSlot = slot;
+                }
+            });
         }
         return application.mGalleryDetailCache;
     }
@@ -297,6 +361,11 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
                     new File(context.getCacheDir(), "spider_info"), 5 * 1024 * 1024); // 5M
         }
         return application.mSpiderInfoCache;
+    }
+
+    @NonNull
+    public static DownloadManager getDownloadManager() {
+        return getDownloadManager(instance);
     }
 
     @NonNull
@@ -317,32 +386,18 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
         return application.mHosts;
     }
 
-    private boolean handleException(Throwable ex) {
-        if (ex == null) {
-            return false;
-        }
-        try {
-            ex.printStackTrace();
-            Crash.saveCrashInfo2File(this, ex);
-            return true;
-        } catch (Throwable tr) {
-            return false;
-        }
+    @NonNull
+    public static FavouriteStatusRouter getFavouriteStatusRouter() {
+        return getFavouriteStatusRouter(getInstance());
     }
 
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex) {
-        if (!handleException(ex) && mDefaultHandler != null) {
-            mDefaultHandler.uncaughtException(thread, ex);
+    @NonNull
+    public static FavouriteStatusRouter getFavouriteStatusRouter(@NonNull Context context) {
+        EhApplication application = ((EhApplication) context.getApplicationContext());
+        if (application.mFavouriteStatusRouter == null) {
+            application.mFavouriteStatusRouter = new FavouriteStatusRouter();
         }
-
-        Activity activity = getTopActivity();
-        if (activity != null) {
-            activity.finish();
-        }
-
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(1);
+        return application.mFavouriteStatusRouter;
     }
 
     @NonNull
@@ -364,6 +419,38 @@ public class EhApplication extends RecordingApplication implements Thread.Uncaug
             return mActivityList.get(mActivityList.size() - 1);
         } else {
             return null;
+        }
+    }
+
+    // Avoid crash on some "energy saving" devices
+    @Override
+    public ComponentName startService(Intent service) {
+        try {
+            return super.startService(service);
+        } catch (Throwable t) {
+            ExceptionUtils.throwIfFatal(t);
+            return null;
+        }
+    }
+
+    // Avoid crash on some "energy saving" devices
+    @Override
+    public boolean bindService(Intent service, ServiceConnection conn, int flags) {
+        try {
+            return super.bindService(service, conn, flags);
+        } catch (Throwable t) {
+            ExceptionUtils.throwIfFatal(t);
+            return false;
+        }
+    }
+
+    // Avoid crash on some "energy saving" devices
+    @Override
+    public void unbindService(ServiceConnection conn) {
+        try {
+            super.unbindService(conn);
+        } catch (Throwable t) {
+            ExceptionUtils.throwIfFatal(t);
         }
     }
 }

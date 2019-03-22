@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Hippo Seven
+ * Copyright 2019 Hippo Seven
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,21 @@
 
 package com.hippo.ehviewer.ui;
 
-import android.content.DialogInterface;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.snackbar.Snackbar;
 import com.hippo.easyrecyclerview.EasyRecyclerView;
 import com.hippo.ehviewer.R;
 import com.hippo.ehviewer.client.EhFilter;
@@ -42,7 +38,6 @@ import com.hippo.ehviewer.dao.Filter;
 import com.hippo.util.DrawableManager;
 import com.hippo.view.ViewTransition;
 import com.hippo.yorozuya.ViewUtils;
-
 import java.util.List;
 
 public class FilterActivity extends ToolbarActivity {
@@ -68,7 +63,7 @@ public class FilterActivity extends ToolbarActivity {
         TextView tip = (TextView) ViewUtils.$$(this, R.id.tip);
         mViewTransition = new ViewTransition(mRecyclerView, tip);
 
-        Drawable drawable = DrawableManager.getDrawable(this, R.drawable.big_filter);
+        Drawable drawable = DrawableManager.getVectorDrawable(this, R.drawable.big_filter);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         tip.setCompoundDrawables(null, drawable, null, null);
 
@@ -106,133 +101,13 @@ public class FilterActivity extends ToolbarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.activity_filter, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_add:
-                showAddFilterDialog();
-                return true;
-            case R.id.action_tip:
-                showTipDialog();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void showTipDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.filter)
-                .setMessage(R.string.filter_tip)
-                .show();
-    }
-
-    private void showAddFilterDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.add_filter)
-                .setView(R.layout.dialog_add_filter)
-                .setPositiveButton(R.string.add, null)
-                .show();
-        AddFilterDialogHelper helper = new AddFilterDialogHelper();
-        helper.setDialog(dialog);
-    }
-
-    private void showDeleteFilterDialog(final Filter filter) {
-        int messageId;
-        switch (filter.mode) {
-            case EhFilter.MODE_TITLE:
-                messageId = R.string.delete_title_filter;
-                break;
-            case EhFilter.MODE_UPLOADER:
-                messageId = R.string.delete_uploader_filter;
-                break;
-            case EhFilter.MODE_TAG:
-                messageId = R.string.delete_tag_filter;
-                break;
-            default:
-                messageId = R.string.delete_filter;
-        }
-        String message = getString(messageId, filter.text);
-
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (DialogInterface.BUTTON_POSITIVE != which || null == mFilterList) {
-                            return;
-                        }
-                        mFilterList.delete(filter);
-                        if (null != mAdapter) {
-                            mAdapter.notifyDataSetChanged();
-                        }
-                        updateView(true);
-                    }
-                }).show();
-    }
-
-    private class AddFilterDialogHelper implements View.OnClickListener {
-
-        @Nullable
-        private AlertDialog mDialog;
-        @Nullable
-        private Spinner mSpinner;
-        @Nullable
-        private TextInputLayout mInputLayout;
-        @Nullable
-        private EditText mEditText;
-
-        public void setDialog(AlertDialog dialog) {
-            mDialog = dialog;
-            mSpinner = (Spinner) ViewUtils.$$(dialog, R.id.spinner);
-            mInputLayout = (TextInputLayout) ViewUtils.$$(dialog, R.id.text_input_layout);
-            mEditText = mInputLayout.getEditText();
-            View button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-            if (null != button) {
-                button.setOnClickListener(this);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (null == mFilterList || null == mDialog || null == mSpinner ||
-                    null == mInputLayout || null == mEditText) {
-                return;
-            }
-
-            String text = mEditText.getText().toString().trim();
-            if (TextUtils.isEmpty(text)) {
-                mInputLayout.setError(getString(R.string.text_is_empty));
-                return;
-            } else {
-                mInputLayout.setError(null);
-            }
-            int mode = mSpinner.getSelectedItemPosition();
-
-            Filter filter = new Filter();
-            filter.mode = mode;
-            filter.text = text;
-            mFilterList.add(filter);
-
-            if (null != mAdapter) {
-                mAdapter.notifyDataSetChanged();
-            }
-            updateView(true);
-
-            mDialog.dismiss();
-            mDialog = null;
-            mSpinner = null;
-            mInputLayout = null;
-            mEditText = null;
         }
     }
 
@@ -244,32 +119,19 @@ public class FilterActivity extends ToolbarActivity {
         public FilterHolder(View itemView) {
             super(itemView);
             text = (TextView) ViewUtils.$$(itemView, R.id.text);
-            icon = (ImageView) itemView.findViewById(R.id.icon);
+            icon = itemView.findViewById(R.id.icon);
 
             if (null != icon) {
                 icon.setOnClickListener(this);
             }
-            // click on the filter text to enable/disable it
-            text.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
-            if (position < 0 || null == mFilterList) {
-                return;
-            }
-            Filter filter = mFilterList.get(position);
-            if (FilterList.MODE_HEADER != filter.mode) {
-                if (v instanceof ImageView) {
-                    showDeleteFilterDialog(filter);
-                } else if (v instanceof TextView) {
-                    mFilterList.trigger(filter);
-
-                    //for updating delete line on filter text
-                    mAdapter.notifyItemChanged(getAdapterPosition());
-                }
-
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            if (clipboard != null) {
+                clipboard.setPrimaryClip(ClipData.newPlainText("filter", text.getText().toString()));
+                Snackbar.make(v, R.string.copied_to_clipboard, 3000).show();
             }
         }
     }
@@ -305,14 +167,7 @@ public class FilterActivity extends ToolbarActivity {
                     break;
             }
 
-            FilterHolder holder = new FilterHolder(getLayoutInflater().inflate(layoutId, parent, false));
-
-            if (R.layout.item_filter == layoutId) {
-                holder.icon.setImageDrawable(
-                        DrawableManager.getDrawable(FilterActivity.this, R.drawable.v_delete_x24));
-            }
-
-            return holder;
+            return new FilterHolder(getLayoutInflater().inflate(layoutId, parent, false));
         }
 
         @Override
@@ -459,18 +314,6 @@ public class FilterActivity extends ToolbarActivity {
             }
 
             throw new IndexOutOfBoundsException();
-        }
-
-        public void add(Filter filter) {
-            mEhFilter.addFilter(filter);
-        }
-
-        public void delete(Filter filter) {
-            mEhFilter.deleteFilter(filter);
-        }
-
-        public void trigger(Filter filter) {
-            mEhFilter.triggerFilter(filter);
         }
     }
 }

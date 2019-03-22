@@ -70,7 +70,6 @@
     <string name="error_decoding_failed">デコードに失敗しました。</string>
     <string name="error_not_found">見つかりませんでした。</string>
     <string name="error_empty">空</string>
-    <string name="error_invalid_zip_file">無効なzipファイルです。</string>
     <string name="error_reading_failed">読み込めませんでした。</string>
     <string name="error_out_of_range">範囲外です。</string>
     <string name="error_write_failed">書き込めませんでした</string>
@@ -78,7 +77,6 @@
     <string name="error_509">509エラー</string>
     <string name="error_invalid_url">無効なリンクです。</string>
     <string name="error_get_ptoken_error">pTokenの取得に失敗しました。</string>
-    <string name="error_invalid_specify_gallery">ギャラリーのキーワードのフォーマット：「618395 0439fa3666」</string>
     <string name="error_cant_create_temp_file">一時ファイルを作成できませんでした</string>
     <string name="error_cant_save_image">画像を保存できませんでした</string>
     <string name="error_invalid_number">無効な数字です</string>
@@ -99,10 +97,6 @@
     <string name="reject">拒否</string>
 
     <string name="help_route">設定->このアプリについて->ヘルプ</string>
-
-    <!-- Crash -->
-    <string name="send">送信</string>
-    <string name="crash_explain">アプリはクラッシュしました。エラーログを開発者に送信して、今後のユーザー体験を向上させるようお手伝いしてもらえますか？（Eメール送信）</string>
 
     <!-- Select scene -->
     <string name="select_scene">ギャラリーサイトを選択してください</string>
@@ -130,10 +124,9 @@
     <string name="search_normal_search">一般検索</string>
     <string name="search_specify_uploader">アップローダを検索</string>
     <string name="search_specify_tag">タグを検索</string>
-    <string name="search_specify_gallery">ギャラリーにアクセス</string>
     <string name="search_enable_advance">その他のオプションを有効化</string>
 
-    <string name="search_tip">普通検索：検索します。\n\nアップローダを検索：このアップローダーがアップロードしたギャラリーをリストします。他のオプションは無視されます。\n\nタグを検索：指定したタグを含むギャラリーをリストします。他のオプションは無視されます。\n\nギャラリーにアクセス：指定したギャラリーに行きます。キーワードは「gid token」です。</string>
+    <string name="search_tip">普通検索：検索します。\n\nアップローダを検索：このアップローダーがアップロードしたギャラリーをリストします。他のオプションは無視されます。\n\nタグを検索：指定したタグを含むギャラリーをリストします。他のオプションは無視されます。</string>
 
     <string name="search_sname">ギャラリーを検索</string>
     <string name="search_stags">ギャラリータグを検索</string>
@@ -274,7 +267,7 @@
 
     <!-- Gallery Previews -->
     <string name="gallery_previews">ギャラリープレビュー</string>
-    <string name="go_to">ジャンプ</string>
+    <string name="go_to">ページに移動</string>
 
     <!-- Download -->
     <string name="scene_download_title">ダウンロード - %s</string>
@@ -304,6 +297,8 @@
     <string name="download_labels">ダウンロードラベル</string>
     <string name="download_start_all">すべて開始</string>
     <string name="download_stop_all">すべて停止</string>
+    <string name="download_reset_reading_progress">閲覧進捗をリセット</string>
+    <string name="reset_reading_progress_message">すべてのダウンロード済みのギャラリーの閲覧進捗をリセットしますか？</string>
     <string name="download_service_label">EhViewerダウンロードサービス</string>
     <string name="download_speed_text">%s</string>
     <string name="download_speed_text_2">%1$s、残り%2$s</string>
@@ -394,14 +389,8 @@
     <string name="settings_eh_excluded_tag_namespaces_summary">指定したタグセットをデフォルト検索から除外</string>
     <string name="settings_eh_excluded_languages">言語を除外</string>
     <string name="settings_eh_excluded_languages_summary">指定した言語のギャラリーをホームページと検索から隠す</string>
-    <string name="settings_eh_hath_proxy">H@H プロキシ</string>
-    <string name="settings_eh_hath_proxy_summary_1">%1$s %2$s:%3$d</string>
-    <string name="settings_eh_hath_proxy_summary_2">未設定</string>
     <string name="settings_eh_show_jpn_title">日本語タイトルを表示</string>
-    <string name="settings_eh_show_jpn_title_summary_on">日本語タイトルを表示しようとします。有効にすると、ギャラリーリストを取得するのにもっと時間がかかることがあります</string>
-    <string name="settings_eh_show_jpn_title_summary_off">デフォルトのタイトルを表示します。多くの場合は英語のタイトルです。</string>
     <string name="settings_eh_filter">フィルター</string>
-    <string name="settings_eh_filter_summary">タイトル、アップローダ、タグとタグセットをフィルター</string>
     <string name="settings_eh_cellular_network_warning">モバイルネットワーク警告</string>
 
     <string name="settings_read">閲覧</string>
@@ -457,7 +446,7 @@
     <string name="settings_download_restoring">復元中</string>
     <string name="settings_download_restore_not_found">復元可能なダウンロードが見つかりません</string>
     <string name="settings_download_restore_failed">復元できませんでした</string>
-    <string name="settings_download_restore_successfully">%s件のタスクが復元されました</string>
+    <string name="settings_download_restore_successfully">%d件のタスクが復元されました</string>
     <string name="settings_download_clean_redundancy">ダウンロードフォルダの不要なファイルを整理</string>
     <string name="settings_download_clean_redundancy_summary">ダウンロードディレクトリからダウンロードタスクにない画像ファイルを削除</string>
     <string name="settings_download_clean_redundancy_no_redundancy">不要なファイルが見つかりませんでした</string>
@@ -475,6 +464,9 @@
     <string name="settings_advanced_clear_memory_cache">メモリキャッシュをクリア</string>
     <string name="settings_advanced_clear_memory_cache_summary">サムネイルとギャラリー情報のメモリキャッシュをクリア</string>
     <string name="settings_advanced_read_cache_size">閲覧キャッシュのサイズ</string>
+    <string name="settings_advanced_proxy">プロキシ</string>
+    <string name="settings_advanced_proxy_summary_1">%1$s %2$s:%3$d</string>
+    <string name="settings_advanced_proxy_summary_2">%1$s</string>
     <string name="settings_privacy_pattern_protection_title">パターン保護</string>
     <string name="settings_privacy_pattern_protection_not_set">パターン保護は設定されていません</string>
     <string name="settings_privacy_pattern_protection_set">パターン保護は設定されています</string>
@@ -488,16 +480,12 @@
 
     <string name="settings_about">このアプリについて</string>
     <string name="settings_about_author">開発者</string>
-    <string name="settings_about_google_plus">Google+コミュニティ</string>
     <string name="settings_about_website">サイト</string>
     <string name="settings_about_source">ソース</string>
     <string name="settings_about_help">ヘルプ</string>
     <string name="settings_about_license">オープンソースライセンス</string>
     <string name="settings_about_license_summary">いろんなオープンソースプロジェクトなしで、EhViewerが生まれることはありません。</string>
     <string name="settings_about_donate">寄付</string>
-    <string name="settings_about_donate_summary">Alipay：seven332$163.com</string>
-    <string name="settings_about_donate_message">ご寄付ありがとうございます。これからもいろんなアプリの開発を進めさせていただきます。\n\nAlipay：seven332$163.com</string>
-    <string name="settings_about_donate_toast">メールアドレスがクリップボードにコピーされました</string>
     <string name="settings_privacy_enable_analytics">データ統計に参加</string>
     <string name="settings_privacy_about_analytics">データ統計について</string>
     <string name="settings_about_version">バージョン番号</string>
@@ -534,14 +522,12 @@
 
     <string name="please_wait">お待ちください</string>
 
-    <string name="enable">有効化</string>
-    <string name="enabled">有効化済み</string>
-    <string name="disabled">無効</string>
-    <string name="ip">IP</string>
-    <string name="port">ポート</string>
-    <string name="Passkey">パスキー</string>
-    <string name="domain_not_supported">ドメイン名には対応していません</string>
-    <string name="invalid_port">無効なポート</string>
+    <string name="proxy_enable">有効化</string>
+    <string name="proxy_enabled">有効化済み</string>
+    <string name="proxy_disabled">無効</string>
+    <string name="proxy_port">ポート</string>
+    <string name="proxy_domain_not_supported">ドメイン名には対応していません</string>
+    <string name="proxy_invalid_port">無効なポート</string>
 
     <string name="cant_get_data_dir">データフォルダを取得できませんでした</string>
     <string name="cant_find_any_data">データが見つかりません</string>
@@ -629,8 +615,6 @@
     <string name="settings_download_media_scan_summary_off">ほとんどのギャラリーアプリはダウンロードパスの内容を表示しません</string>
     <string name="settings_download_download_origin_image_summary">有効にすると、ダウンロード制限にもっとはやく達する恐れがあります</string>
     <string name="settings_advanced_clear_download_path_cache_summary">ギャラリー ダウンロード パスは無効なようで、もう一度ダウンロードする必要があると表示されている場合は、ダウンロードパスのキャッシュをクリアしてみてください。</string>
-    <string name="clipboard_gallery_url_dialog_title">ギャラリーリンクが発見されました</string>
-    <string name="clipboard_gallery_url_dialog_message">クリップボードにあるギャラリーにアクセスしますか？</string>
     <string name="page_menu_save_to">名前を付けて保存</string>
     <string name="settings_advanced_app_language_title">アプリ言語（Language）</string>
     <string name="hosts">カスタムhosts.txt</string>
@@ -649,10 +633,26 @@
     <string name="settings_about_changelog">変更履歴</string>
     <string name="app_language_system">システム言語（既定）</string>
     <string name="settings_about_telegram">Telegram</string>
-    <string name="settings_about_auto_check_for_updates">更新を自動で確認</string>
     <string name="download_service">ダウンロードサービス</string>
     <string name="settings_advanced_built_in_hosts_summary">ホストをアプリ既定のIPにマッピング\nカスタムhosts.txtに上書きされます。</string>
     <string name="settings_advanced_custom_hosts_title">カスタムhosts.txt</string>
     <string name="settings_advanced_custom_hosts_summary">ホスト名をIPにマッピング\n既定のhosts.txtを上書きできます。</string>
 
+     <string name="settings_eh_theme">テーマ</string>
+    <string name="settings_eh_theme_light">ライト</string>
+    <string name="settings_eh_theme_dark">ダーク</string>
+    <string name="settings_eh_theme_black">ブラック</string>
+    <string name="settings_about_donate_message">寄付していただいても追加の機能を解禁したりしませんが、このアプリの開発を助けられます</string>
+    <string name="settings_about_donate_alipay">Alipay</string>
+    <string name="settings_about_donate_paypal">PayPal</string>
+    <string name="settings_about_donate_open">開く</string>
+    <string name="settings_about_donate_copy">コピー</string>
+    <string name="settings_about_donate_copied">コピーしました</string>
+    <string name="settings_eh_identity_cookies">アカウントのCookies</string>
+    <string name="settings_eh_identity_cookies_summary">ログイン用のCookiesです</string>
+    <string name="settings_eh_identity_cookies_signed">下記の情報を持つ誰でもこのアカウントにログインできますので&lt;br&gt;&lt;b&gt;絶対に他人に渡さないように！&lt;/b&gt;&lt;br&gt;&lt;br&gt;%s</string>
+    <string name="settings_eh_identity_cookies_tourist">まだログインしていません</string>
+    <string name="settings_eh_identity_cookies_copy">コピー</string>
+    <string name="settings_eh_show_gallery_pages">ギャラリーページ数を表示</string>
+    <string name="settings_eh_show_gallery_pages_summary">リストにギャラリーのページの数量を表示します</string>
 </resources>

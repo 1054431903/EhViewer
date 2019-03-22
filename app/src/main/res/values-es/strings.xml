@@ -67,7 +67,6 @@
     <string name="error_decoding_failed">Decodificacion fallida</string>
     <string name="error_not_found">No encontrado</string>
     <string name="error_empty">Vacio</string>
-    <string name="error_invalid_zip_file">Archivo ZIP invalido</string>
     <string name="error_reading_failed">Lectura Fallida</string>
     <string name="error_out_of_range">Fuera de rango</string>
     <string name="error_write_failed">Falla en la escritura</string>
@@ -75,7 +74,6 @@
     <string name="error_509">509</string>
     <string name="error_invalid_url">Url invalida</string>
     <string name="error_get_ptoken_error">Error al obtener token</string>
-    <string name="error_invalid_specify_gallery">Keyword should looks like \"618395 0439fa3666\" for specify gallery</string>
     <string name="error_cant_create_temp_file">Imposible crear archivo temporal</string>
     <string name="error_cant_save_image">Imposible guardar la imagen</string>
     <string name="error_invalid_number">Número invalido</string>
@@ -89,14 +87,10 @@
     <string name="content_layout_restore_tip">Puslar para reintentar</string>
     <string name="write_rationale">EhViewer solicitará el permiso WRITE_EXTERNAL_STORAGE para descargar galerías. ¿Desea conceder el permiso?</string>
     <string name="you_rejected_me">Me has rechazado :(</string>
-    <string name="analytics_explain">Would you mind if the developer collected your device information and your usage? It will help the developer a lot.&lt;br&gt;&lt;br&gt;Data analysis service is provided by Google Analytics. Its privacy policy can be found at &lt;a href=&quot;https://www.google.com/policies/privacy/&quot;&gt;https://www.google.com/policies/privacy/&lt;/a&gt;.&lt;br&gt;&lt;br&gt;If you agree to join data analysis, your device information and your usage will be collected, including but not limited to Android API version, equipment model, language residence, the application version, conversion time, function times. The developer promise that these information will NOT be collected, including phone number, e-mail address, IMEI.&lt;br&gt;&lt;br&gt;Your information will not be collected until you agree to join data analysis.&lt;br&gt;&lt;br&gt;The collected information will be analyzed by Google Analytics. The analysis report can only be viewed by the developer of this application.</string>
+    <string name="analytics_explain">Would you mind if the developer collected your device information and your usage? It will help the developer a lot.&lt;br&gt;&lt;br&gt;Data analysis service is provided by Google Analytics for Firebase. Its privacy policy can be found at &lt;a href=&quot;https://www.google.com/policies/privacy/&quot;&gt;https://www.google.com/policies/privacy/&lt;/a&gt;.&lt;br&gt;&lt;br&gt;If you agree to join data analysis, your device information and your usage will be collected, including but not limited to Android API version, equipment model, language residence, the application version, conversion time, function times. The developer promise that these information will NOT be collected, including phone number, e-mail address, IMEI.&lt;br&gt;&lt;br&gt;Your information will not be collected until you agree to join data analysis.&lt;br&gt;&lt;br&gt;The collected information will be analyzed by Google Analytics for Firebase. The analysis report can only be viewed by the developer of this application.</string>
     <string name="get_it">Entendido</string>
     <string name="accept">Aceptar</string>
     <string name="reject">Rechazar</string>
-
-    <!-- Crash -->
-    <string name="send">Enviar</string>
-    <string name="crash_explain">Esta aplicación se cerró inesperadamente la ultima vez. ¿Desea enviarle un logcat (registro) al desarrollador para una mejor experiencia en el futuro? (vía e-mail)</string>
 
     <!-- Select scene -->
     <string name="select_scene">¿Qué galería deseas seleccionar?</string>
@@ -123,10 +117,9 @@
     <string name="search_normal_search">Búsqueda general</string>
     <string name="search_specify_uploader">Uploader específicos</string>
     <string name="search_specify_tag">Etiquetas específicas</string>
-    <string name="search_specify_gallery">Galerías específicas</string>
     <string name="search_enable_advance">Habilitar opciones avanzadas</string>
 
-    <string name="search_tip">Búsqueda normal: Solo busca.\n\nUploader especifico: Listar de galerías subidas por el uploader. Otras opciones serán ignoradas.\n\nEtiquetas específicas: Listar las galerías que contienen la etiqueta. Solo se acepta una etiqueta. Otras opciones serán ignoradas.\n\nGalería especifica: Ir a la Galería. La palabra clave debe ser \"gid token\".</string>
+    <string name="search_tip">Búsqueda normal: Solo busca.\n\nUploader especifico: Listar de galerías subidas por el uploader. Otras opciones serán ignoradas.\n\nEtiquetas específicas: Listar las galerías que contienen la etiqueta. Solo se acepta una etiqueta. Otras opciones serán ignoradas.</string>
 
     <string name="search_sname">Buscar galerías</string>
     <string name="search_stags">Buscar etiquetas de galería</string>
@@ -356,7 +349,7 @@
     <string name="settings_eh_list_mode">Modo lista</string>
     <string name="settings_eh_list_mode_detail">Con detalles</string>
     <string name="settings_eh_list_mode_thumb">Solo portada</string>
-    <string name="settings_eh_detail_size">Tamañp del detalle</string>
+    <string name="settings_eh_detail_size">Tamaño del detalle</string>
     <string name="settings_eh_detail_size_long">Largo</string>
     <string name="settings_eh_detail_size_short">Corto</string>
     <string name="settings_eh_thumb_size">Tamaño de vista previa</string>
@@ -373,14 +366,10 @@
     <string name="settings_eh_excluded_languages_summary">Ocultar galerías en ciertos idiomas de la lista de galerías y búsquedas</string>
     <string name="settings_eh_excluded_tag_namespaces">Excluir etiquetas espacios de nombres</string>
     <string name="settings_eh_excluded_tag_namespaces_summary">Excluir ciertos espacios de nombres de una búsqueda de etiquetas por defecto</string>
-    <string name="settings_eh_hath_proxy">H@H proxy</string>
-    <string name="settings_eh_hath_proxy_summary_1">%1$s %2$s:%3$d</string>
-    <string name="settings_eh_hath_proxy_summary_2">Sin establecer</string>
-    <string name="settings_eh_show_jpn_title">Mostrar título en japonés</string>
-    <string name="settings_eh_show_jpn_title_summary_on">Intentar mostrar títulos en japonés. Tomará más tiempo en cargar la lista de galerías</string>
-    <string name="settings_eh_show_jpn_title_summary_off">Mostrar títulos por defecto, usualmente es en inglés</string>
+    <string name="settings_eh_show_jpn_title">Mostrar títulos en japonés</string>
+    <string name="settings_eh_show_gallery_pages">Mostrar número de páginas de la galería</string>
+    <string name="settings_eh_show_gallery_pages_summary">Se verá cuántas páginas tiene una galería</string>
     <string name="settings_eh_filter">Filtros</string>
-    <string name="settings_eh_filter_summary">Filtrar por titulo, uploader, etiqueta y etiquetas variables</string>
     <string name="settings_eh_cellular_network_warning">Advertencia de redes moviles</string>
 
     <string name="settings_read">Lectura</string>
@@ -406,11 +395,11 @@
     <string name="settings_read_start_position_center">Centro</string>
     <string name="settings_read_keep_screen_on">Pantalla siempre encendida</string>
     <string name="settings_read_show_clock">Mostrar hora</string>
-    <string name="settings_read_show_progress">Mostrar progreso</string>
-    <string name="settings_read_show_battery">Mostrar batería</string>
-    <string name="settings_read_volume_page">Pasar páginas con tecla del volumen</string>
+    <string name="settings_read_show_progress">Mostrar progreso de lectura</string>
+    <string name="settings_read_show_battery">Mostrar porcentaje de la batería</string>
+    <string name="settings_read_volume_page">Pasar páginas con botón del volumen</string>
     <string name="settings_read_reading_fullscreen">Pantalla completa</string>
-    <string name="settings_read_custom_screen_lightness">Brillo de pantalla personalizado</string>
+    <string name="settings_read_custom_screen_lightness">Personalizar brillo de la pantalla</string>
     <string name="settings_read_screen_lightness">Brillo de la pantalla</string>
 
     <string name="settings_download">Descargas</string>
@@ -458,6 +447,9 @@
     <string name="settings_advanced_clear_memory_cache_summary">Borrar vistas previas, galerías, información y caché de memoria</string>
     <string name="settings_advanced_read_cache_size">Tamaño del caché (archivos temporales)</string>
 	<string name="settings_advanced_app_language_title">Idioma de la aplicación</string>
+    <string name="settings_advanced_proxy">Proxy</string>
+    <string name="settings_advanced_proxy_summary_1">%1$s %2$s:%3$d</string>
+    <string name="settings_advanced_proxy_summary_2">%1$s</string>
     <string name="settings_privacy_pattern_protection_title">Protección por patrón</string>
     <string name="settings_privacy_pattern_protection_not_set">No se ha configurado la protección por patrón</string>
     <string name="settings_privacy_pattern_protection_set">La protección por patrón ha sido configurado</string>
@@ -471,7 +463,6 @@
 
     <string name="settings_about">Acerca de</string>
     <string name="settings_about_author">Autor</string>
-    <string name="settings_about_google_plus">Comunidad en Google+</string>
     <string name="settings_about_website">PaginaWeb</string>
     <string name="settings_about_source">Código fuente</string>
     <string name="settings_about_changelog">Registro de cambios</string>
@@ -479,24 +470,18 @@
     <string name="settings_about_license">Licencia</string>
     <string name="settings_about_license_summary">EhViewer es posible gracias a varios proyectos de código abierto</string>
     <string name="settings_about_donate">Donar</string>
-    <string name="settings_about_donate_summary">Alipay: seven332$163.com</string>
-    <string name="settings_about_donate_message">Tu donación me ayuda a desarrollar más y mejores aplicaciones.\n\nAlipay: seven332$163.com</string>
-    <string name="settings_about_donate_toast">Email copiado al portapapeles</string>
     <string name="settings_privacy_enable_analytics">Habilitar analytics</string>
     <string name="settings_privacy_about_analytics">Acerca de analytics</string>
     <string name="settings_about_version">Versión de compilación</string>
     <string name="settings_about_check_for_updates">Verificar actualizaciones</string>
-	<string name="settings_about_auto_check_for_updates">Verificar automáticamente actualizaciones</string>
     <string name="settings_about_beta_update_channel">Canal de versiones de prueba</string>
     <string name="settings_about_beta_update_channel_summary">Las versiones de prueba podrían tener errores</string>
 
-    <string name="enable">Habilitar</string>
-    <string name="enabled">Habilitado</string>
-    <string name="ip">IP</string>
-    <string name="port">Puerto</string>
-    <string name="Passkey">Clave Maestra</string>
-    <string name="domain_not_supported">Dominio no soportado</string>
-    <string name="invalid_port">Puerto Invalido</string>
+    <string name="proxy_enable">Habilitar</string>
+    <string name="proxy_enabled">Habilitado</string>
+    <string name="proxy_port">Puerto</string>
+    <string name="proxy_domain_not_supported">Dominio no soportado</string>
+    <string name="proxy_invalid_port">Puerto Invalido</string>
 
     <string name="cant_get_data_dir">No se puede obtener el directorio de datos</string>
     <string name="cant_find_any_data">No se pueden encuentran datos</string>
@@ -616,7 +601,6 @@
     <string name="delete">Eliminar</string>
     <string name="dir_picker">Seleccionar directorio</string>
     <string name="directory_not_writable">No se puede escribir en el directorio</string>
-    <string name="disabled">Deshabilitado</string>
     <string name="download_state_failed">Descarga fallida</string>
     <string name="download_state_none">Descarga en pausa</string>
     <string name="error_password_cannot_empty">La contraseña no puede estar vacía</string>
@@ -625,8 +609,6 @@
     <string name="settings_privacy">Privacidad</string>
     <string name="settings_privacy_secure">Impedir capturas de pantalla</string>
     <string name="settings_privacy_secure_summary">Si habilitas esta opción no podrás hacer captura de pantalla y el sistema no mostrará una previsualización en el multitareas.\n\nDeberás reiniciar la aplicación para activar esta función.</string>
-    <string name="clipboard_gallery_url_dialog_title">Galería detectada</string>
-    <string name="clipboard_gallery_url_dialog_message">Se ha detectado un vínculo de galería en el portapapeles. ¿Quieres entrarlo?</string>
     <string name="page_menu_save_to">Guardar a...</string>
     <string name="enable_fingerprint">Usar huellas digitales para desbloquear</string>
     <string name="u_config">Ajustes EHentai</string>
@@ -646,6 +628,12 @@
     <string name="recaptcha_none">Toca acá</string>
     <string name="recaptcha_loading">Cargando...</string>
     <string name="recaptcha_failure">Fallado</string>
-
-
+    <string name="theme_light">Tema claro</string>
+    <string name="theme_dark">Tema oscuro</string>
+    <string name="theme_black">Tema negro</string>
+    <string name="settings_eh_theme">Tema</string>
+    <string name="settings_eh_theme_light">Claro</string>
+    <string name="settings_eh_theme_dark">Oscuro</string>
+    <string name="settings_eh_theme_black">Negro</string>
+	
 </resources>

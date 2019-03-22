@@ -20,19 +20,20 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.util.SparseArray;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.FragmentActivity;
+import com.hippo.drawerlayout.DrawerLayout;
+import com.hippo.ehviewer.Analytics;
 import com.hippo.ehviewer.ui.MainActivity;
 import com.hippo.scene.SceneFragment;
 import com.hippo.util.AppHelper;
@@ -107,6 +108,22 @@ public abstract class BaseScene extends SceneFragment {
         FragmentActivity activity = getActivity();
         if (activity instanceof MainActivity) {
             ((MainActivity) activity).toggleDrawer(drawerGravity);
+        }
+    }
+
+    public void setDrawerGestureBlocker(DrawerLayout.GestureBlocker gestureBlocker) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).setDrawerGestureBlocker(gestureBlocker);
+        }
+    }
+
+    public boolean isDrawersVisible() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            return ((MainActivity) activity).isDrawersVisible();
+        } else {
+            return false;
         }
     }
 
@@ -259,6 +276,12 @@ public abstract class BaseScene extends SceneFragment {
         if (null != activity && null != view) {
             AppHelper.showSoftInput(activity, view);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Analytics.onSceneView(this);
     }
 
     @Override
